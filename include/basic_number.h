@@ -5,6 +5,7 @@
 */
 #include <memory>
 #include <vector>
+#include <iostream>
 #include <string>
 namespace HM
 {
@@ -29,13 +30,14 @@ namespace HM
 	{
 	public:
 		Basic(ObjType type) :obj_type(type) {}
-		virtual SBasic operate(Operator, SBasic &s) = 0;
+		virtual SBasic operate(Operator, const SBasic &s) = 0;
 		virtual SBasic simplify() = 0;
 		virtual std::string to_string()
 		{
 			return "empty obj";
 		}
 		virtual SBasic Convert(ObjType objt) = 0;
+		ObjType get_type() { return obj_type; }
 		virtual ~Basic(){}
 	private:
 		ObjType obj_type;
@@ -45,7 +47,7 @@ namespace HM
 	{
 	public:
 		Real(double _value) :Basic(TReal),value(_value) {}
-		SBasic operate(Operator, SBasic &)override;
+		SBasic operate(Operator, const SBasic &)override;
 		SBasic simplify()override;
 		std::string to_string()
 		{
@@ -55,7 +57,6 @@ namespace HM
 	private:
 		double value;
 	};
-
 	class Fraction :public Basic
 	{
 	public:
@@ -63,13 +64,16 @@ namespace HM
 		{
 			if (den == 0)
 				throw std::runtime_error("den couldn't set zero");
+			value = (double)den / (double)num;
 		}
-		SBasic operate(Operator, SBasic &)override;
+		SBasic operate(Operator, const SBasic &)override;
 		SBasic simplify()override;
 		std::string to_string();
 		SBasic Convert(ObjType objt)override;
+		bool real_mod();
 	private:
 		int num;
 		int den;
+		double value;
 	};
 }

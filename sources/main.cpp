@@ -12,9 +12,9 @@ void print_vec(std::vector<T> v)
 }
 int main()
 {
-	HM::Fraction a(-33, -32);
-	std::cout<<(a.Convert(HM::TReal))->to_string();
-	//std::cout<<a.to_string();
+	HM::SReal tmp= std::make_shared<HM::Real>(1.75);
+	HM::SFraction obj = std::make_shared<HM::Fraction>(1,4324);
+	std::cout << obj->operate(HM::PLUS, tmp)->to_string();
 	Sleep(100000);
 	return 0;
 }

@@ -43,6 +43,7 @@ std::vector<int>::iterator HM::find_ordered_vec(std::vector<int> &a, int n)
 	}
 	return a.end();
 }
+
 void HM::cut_same_element(std::vector<int> &a, std::vector<int> &b)
 {
 	for (int i = 0; i < b.size(); i++)

@@ -12,9 +12,19 @@ void print_vec(std::vector<T> v)
 }
 int main()
 {
-	HM::SReal tmp= std::make_shared<HM::Real>(1.75);
-	HM::SFraction obj = std::make_shared<HM::Fraction>(1,4324);
-	std::cout << obj->operate(HM::PLUS, tmp)->to_string();
-	Sleep(100000);
+	try
+	{
+		HM::SSurd tmp2 = std::make_shared<HM::Surd>(-1, 8);
+		HM::SSurd tmp = std::make_shared<HM::Surd>(3, 7);
+		HM::SurdBunch sb({ tmp2,tmp,tmp,tmp2});
+		std::cout << sb.operate(HM::PLUS, tmp)->to_string();
+		sb.simplify();
+		//std::cout << sb.to_string();
+		Sleep(100000);
+	}
+	catch (std::exception &e)
+	{
+		std::cout << e.what();
+	}
 	return 0;
 }

@@ -11,11 +11,14 @@ namespace HM
 {
 	class Basic;
 	class Real;
+	class Surd;
 	class Fraction;
+	class SurdBunch;
+	using SSB = std::shared_ptr<SurdBunch>;
 	using SBasic = std::shared_ptr<Basic>;
 	using SReal = std::shared_ptr<Real>;
 	using SFraction = std::shared_ptr<Fraction>;
-
+	using SSurd = std::shared_ptr<Surd>;
 	enum Operator
 	{
 		PLUS,MINUS,DIV,TIM,MOD
@@ -23,7 +26,8 @@ namespace HM
 
 	enum ObjType
 	{
-		TReal,TFrac,TIrretional,
+		TReal,TFrac,TIrretional,TSurd,TSBunch,
+		Oppsite,
 	};
 
 	class Basic
@@ -32,11 +36,11 @@ namespace HM
 		Basic(ObjType type) :obj_type(type) {}
 		virtual SBasic operate(Operator, const SBasic &s) = 0;
 		virtual SBasic simplify() = 0;
-		virtual std::string to_string()
+		virtual std::string to_string()const
 		{
 			return "empty obj";
 		}
-		virtual SBasic Convert(ObjType objt) = 0;
+		virtual SBasic convert(ObjType objt) = 0;
 		ObjType get_type() { return obj_type; }
 		virtual ~Basic(){}
 	private:
@@ -49,11 +53,12 @@ namespace HM
 		Real(double _value) :Basic(TReal),value(_value) {}
 		SBasic operate(Operator, const SBasic &)override;
 		SBasic simplify()override;
-		std::string to_string()
+		bool is_integer();
+		std::string to_string()const
 		{
 			return std::to_string(value);
 		}
-		SBasic Convert(ObjType objt)override;
+		SBasic convert(ObjType objt)override;
 	private:
 		double value;
 	};
@@ -68,12 +73,46 @@ namespace HM
 		}
 		SBasic operate(Operator, const SBasic &)override;
 		SBasic simplify()override;
-		std::string to_string();
-		SBasic Convert(ObjType objt)override;
+		std::string to_string()const override;
+		SBasic convert(ObjType objt)override;
 		bool real_mod();
 	private:
 		int num;
 		int den;
 		double value;
 	};
+	class SurdBunch :public Basic
+	{
+	public:
+		SurdBunch() :SurdBunch(std::vector<SSurd>()) {}
+		SurdBunch(const std::vector<SSurd> &_expr) :Basic(TSBunch), expr(_expr) {}
+		void insert_element(const SSurd &obj);
+		SBasic operate(Operator, const SBasic &)override;
+		SBasic simplify()override;
+		std::string to_string()const override;
+		SBasic convert(ObjType objt)override;
+	private:
+		std::vector<SSurd> expr;
+	};
+	class Surd :public Basic
+	{
+	public:
+		Surd(int _outside, int _inside) :Basic(TSurd), inside(_inside), outside(_outside)
+		{
+			value = outside * std::sqrt(inside);
+		}
+		Surd(int _inside) :Surd(1, _inside) {}
+		SBasic operate(Operator, const SBasic &)override;
+		SBasic simplify()override;
+		std::string to_string()const override;
+		SBasic convert(ObjType objt)override;
+		bool real_mod();
+		friend SurdBunch;
+	private:
+		int inside;
+		int outside;
+		double value;
+	};
+
+
 }

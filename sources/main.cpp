@@ -17,9 +17,10 @@ int main()
 		HM::SSurd tmp2 = std::make_shared<HM::Surd>(-1, 8);
 		HM::SSurd tmp = std::make_shared<HM::Surd>(3, 7);
 		HM::SurdBunch sb({ tmp2,tmp,tmp,tmp2});
-		std::cout << sb.operate(HM::PLUS, tmp)->to_string();
-		sb.simplify();
-		//std::cout << sb.to_string();
+		auto b = sb.operate(HM::PLUS, tmp);
+		b->simplify();
+		std::cout << b->to_string() << std::endl;
+		std::cout << b->to_double();
 		Sleep(100000);
 	}
 	catch (std::exception &e)

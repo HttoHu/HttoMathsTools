@@ -41,6 +41,7 @@ namespace HM
 			return "empty obj";
 		}
 		virtual SBasic convert(ObjType objt) = 0;
+		virtual double to_double()const=0;
 		ObjType get_type() { return obj_type; }
 		virtual ~Basic(){}
 	private:
@@ -53,6 +54,7 @@ namespace HM
 		Real(double _value) :Basic(TReal),value(_value) {}
 		SBasic operate(Operator, const SBasic &)override;
 		SBasic simplify()override;
+		double to_double()const override;
 		bool is_integer();
 		std::string to_string()const
 		{
@@ -71,10 +73,13 @@ namespace HM
 				throw std::runtime_error("den couldn't set zero");
 			value = (double)den / (double)num;
 		}
+		// ======= some methods derived from base class 
 		SBasic operate(Operator, const SBasic &)override;
+		double to_double()const override;
 		SBasic simplify()override;
 		std::string to_string()const override;
 		SBasic convert(ObjType objt)override;
+		//============================================
 		bool real_mod();
 	private:
 		int num;
@@ -87,10 +92,13 @@ namespace HM
 		SurdBunch() :SurdBunch(std::vector<SSurd>()) {}
 		SurdBunch(const std::vector<SSurd> &_expr) :Basic(TSBunch), expr(_expr) {}
 		void insert_element(const SSurd &obj);
+		//===========================================
 		SBasic operate(Operator, const SBasic &)override;
 		SBasic simplify()override;
 		std::string to_string()const override;
 		SBasic convert(ObjType objt)override;
+		double to_double()const override;
+		//==========================================
 	private:
 		std::vector<SSurd> expr;
 	};
@@ -102,10 +110,13 @@ namespace HM
 			value = outside * std::sqrt(inside);
 		}
 		Surd(int _inside) :Surd(1, _inside) {}
+		//============================================
+		double to_double()const override;
 		SBasic operate(Operator, const SBasic &)override;
 		SBasic simplify()override;
 		std::string to_string()const override;
 		SBasic convert(ObjType objt)override;
+		//==============================================
 		bool real_mod();
 		friend SurdBunch;
 	private:

@@ -80,6 +80,10 @@ SBasic HM::Fraction::operate(Operator operation, const SBasic & obj)
 		std::runtime_error("syntax error");
 	}
 }
+double HM::Fraction::to_double() const
+{
+	return (double)(num) / (double)den;
+}
 SBasic HM::Fraction::simplify()
 {
 	std::vector<int> num_vec = split_number(std::abs(num));
@@ -183,6 +187,11 @@ SBasic HM::Real::simplify()
 	return SNEW<Real>(value);
 }
 
+double HM::Real::to_double() const
+{
+	return value;
+}
+
 bool HM::Real::is_integer()
 {
 	int a = (int)value;
@@ -228,6 +237,11 @@ SBasic HM::Real::convert(ObjType objt)
 		break;
 	}
 
+}
+
+double HM::Surd::to_double() const
+{
+	return outside * std::sqrt(inside);
 }
 
 SBasic HM::Surd::operate(Operator operation, const SBasic & obj)
@@ -464,4 +478,14 @@ SBasic HM::SurdBunch::convert(ObjType objt)
 		throw std::runtime_error("rmd");
 		break;
 	}
+}
+
+double HM::SurdBunch::to_double() const
+{
+	double ret = 0.0;
+	for (const auto &a : expr)
+	{
+		ret += a->to_double();
+	}
+	return ret;
 }
